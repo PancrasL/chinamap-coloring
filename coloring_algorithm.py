@@ -66,17 +66,16 @@ def load_graph(filename):
     return g
 
 
-# 保存着色过程
-def save_graph(coloring_record):
+# 将省份id记录转换为省份名称记录
+def trans_record(id_record):
     global N
-    result = []
-    for record in coloring_record:
-        cur_coloring_result = []
+    name_record = []
+    for record in id_record:
+        cur_coloring_record = []
         for i in range(1, N+1):
-            cur_coloring_result.append((get_province_name_by_id(i), record[i]))
-        result.append(cur_coloring_result)
-    return result
-            
+            cur_coloring_record.append((get_province_name_by_id(i), record[i]))
+        name_record.append(cur_coloring_record)
+    return name_record      
 
     
 # 获取cur节点周围可用的颜色
@@ -96,9 +95,9 @@ def find_next_node(node_color):
     return -1
 
 
-def coloring(cur, graph, node_color, coloring_record):
+def coloring(cur, graph, node_color, all_coloring_record, true_coloring_record):
     # 记录着色过程
-    coloring_record.append(copy.deepcopy(node_color))
+    all_coloring_record.append(copy.deepcopy(node_color))
 
     # 获取可用的颜色
     unused_color = get_unused_color(cur, graph, node_color)
@@ -109,48 +108,49 @@ def coloring(cur, graph, node_color, coloring_record):
         for color in unused_color:
             node_color[cur] = color
             next_node = find_next_node(node_color)
-            
+            temp = copy.deepcopy(node_color)
             if(next_node > 0):
-                result = coloring(next_node, graph, node_color, coloring_record)
+                result = coloring(next_node, graph, node_color, all_coloring_record, true_coloring_record)
                 # 当前着色方案可行
                 if(result):
+                    true_coloring_record.append(temp)
                     return True
                 else:
                     continue
             # 所有节点上色完毕
             else:
+                true_coloring_record.append(temp)
                 return True
         # 当前涂色方案不可行，清空颜色
         node_color[cur] = 0
     # 当前节点没有可用颜色或者当前涂色方案无解，返回False
     return False
 
-# 算法入口
-# interval用于控制记录中间着色过程的间隔，如果值为1，则记录每一次着色过程，如果值为10，则以10次迭代过程为单位记录着色过程
-def start(interval):
+# node_id:表示着色开始的位置
+# is_true:True:显示正确的着色路径
+def start(node_id, is_true):
     # 记录省份的颜色
     # 0表示无色，1、2、3、4表示4种不同的颜色
-    coloring_record = []
+    all_coloring_record = []
+    true_coloring_record = []
     china_map = load_graph('data/chinamap_adj_data.txt')
     node_color = [0]*(N+1)
 
-    if(coloring(1, china_map, node_color, coloring_record)):
-        coloring_record.append(copy.deepcopy(node_color))
+    if(coloring(1, china_map, node_color, all_coloring_record, true_coloring_record)):
+        all_coloring_record.append(copy.deepcopy(node_color))
     else:
         print("无解")
+        return -1
 
-    result = save_graph(coloring_record)
-
-    final_result = []
-    i = 1
-    final_result.append(result[0])
-    while(i * interval<len(result)):
-        final_result.append(result[i*interval])
-        i = i+1
-
-    final_result.append(result[-1])
-    return final_result
+    result = []
+    if(is_true):
+        # 正确的着色序列
+        result = trans_record(true_coloring_record[::-1])
+    else:
+        # 所有的着色序列
+        result = trans_record(all_coloring_record)
+    return result
 
 
 if __name__ == "__main__":
-    result = start(1)
+    result = start(1, True)
