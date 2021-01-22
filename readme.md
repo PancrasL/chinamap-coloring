@@ -15,7 +15,7 @@
 # 2. python3 view.py 8 1 表示从省份8开始着色，显示所有的着色路径
 
 $ pip3 install -r requirements.txt
-$ python3 view.py 1 part
+$ python3 view.py 1 0
 # 浏览器打开生成的output/mapcoloring.html文件
 
 ```
