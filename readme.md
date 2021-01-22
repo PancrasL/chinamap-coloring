@@ -4,7 +4,7 @@
 
 + **coloring_algorithm.py** 地图着色算法文件，入口为coloring_algorithm.start()
 + **view.py**   地图着色前端界面文件，使用pyecharts绘制
-+ **output/mapcoloring.html**   着色结果，由map_coloring.py自动生成
++ **output/mapcoloring.html**   着色结果，由view.py自动生成
 + **data/chinamap_adj_data.txt**    中国地图邻接省份的简化数据（使用）
 + **data/chinamap_adj_data.json**   中国地图邻接省份的原始数据（未使用）
 
