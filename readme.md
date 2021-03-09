@@ -16,9 +16,9 @@
 
 $ pip3 install -r requirements.txt
 $ python3 view.py 1 0
-# 浏览器打开生成的output/mapcoloring.html文件
 
 ```
+用浏览器打开生成的output/mapcoloring.html文件
 
 ## 结果示例
 
