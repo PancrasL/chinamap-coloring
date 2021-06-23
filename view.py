@@ -6,6 +6,7 @@
 from pyecharts.charts import Map, Geo, Timeline
 from pyecharts import options as opts
 import sys
+import os
 
 import coloring_algorithm as coloring
 
@@ -34,7 +35,6 @@ def generate_map(data, i):
     )
     return map
 
-
 if __name__ == "__main__":
     if len(sys.argv) == 3:
         node_id = sys.argv[1]
@@ -47,5 +47,7 @@ if __name__ == "__main__":
         for d in datas:
             timeline.add(generate_map(d, index), str(index))
             index = index + 1
-
+        folder_path = 'output/'
+        if not os.path.exists(folder_path):  #判断是否存在文件夹如果不存在则创建为文件夹
+            os.makedirs(folder_path)
         timeline.render(path='output/mapcoloring.html')
